@@ -1,0 +1,109 @@
+$engine: 3
+$onesync: legacy
+name: SKYESXLegacy
+version: 3.3.1
+author: Vxper & Joel
+description: A full featured and highly configurable yet lightweight ESX Legacy base that can be easily extended. 
+
+tasks:
+  # Download default CFX resources
+  - action: download_github
+    src: https://github.com/citizenfx/cfx-server-data
+    ref: master
+    subpath: resources
+    dest: ./resources/[cfx-default]
+  - action: remove_path
+    path: ./resources/[cfx-default]/[gameplay]/chat
+  
+  # Download and prepare server.cfg / loadingscreen / database
+  - action: download_github
+    src: https://github.com/esx-framework/esx-recipes
+    ref: legacy
+    dest: ./tmp/recipe
+
+  - action: move_path
+    src: ./tmp/recipe/server.cfg
+    dest: ./server.cfg
+
+  - action: move_path
+    src: ./tmp/recipe/esxLogo.png
+    dest: ./esxLogo.png
+
+  # Download basic resources and ESX dependencies
+
+  - action: connect_database
+
+  - action: download_github
+    src: https://github.com/esx-framework/esx-core
+    ref: main
+    dest: ./tmp/core
+
+  - action: query_database
+    file: ./tmp/core/[SQL]/legacy.sql
+
+  - action: download_github
+    src: https://github.com/esx-framework/ESX-Legacy-Addons/
+    ref: main
+    dest: ./tmp/addons
+
+  - action: move_path
+    src: ./tmp/core/[core]
+    dest: ./resources/[core]
+
+  - action: move_path
+    src: ./tmp/addons/[esx_addons]
+    dest: ./resources/[esx_addons]
+
+  - action: download_github
+    src: https://github.com/Bob74/bob74_ipl
+    ref: master
+    dest: ./resources/[standalone]/bob74_ipl
+
+  - action: download_github
+    src: https://github.com/AvarianKnight/pma-voice
+    ref: main
+    dest: ./resources/[standalone]/pma-voice
+
+
+
+  - action: download_github
+    src: https://github.com/Blumlaut/EasyAdmin
+    ref: 776ac8f3898182e5c075d533bbd89e92efa017e9
+    dest: ./resources/EasyAdmin
+
+  - action: download_github
+    src: https://github.com/overextended/ox_inventory
+    ref: b2e1a21e66c2218a6bcdb4068908f19ccb0c6a57
+    dest: ./resources/ox_inventory
+
+
+
+  - action: download_github
+    src: https://github.com/gabovrs/vrs_mdt
+    ref: 194128eefb1386e40aa8a738e68134ec746e9fc7
+    dest: ./resources/vrs_mdt
+
+    
+  - action: download_github
+    src: https://github.com/overextended/ox_lib
+    ref: b4e3bcdad75f91eaa6d4e75063de4a281ebd36d9
+    dest: ./resources/ox_lib
+
+    
+  - action: download_github
+    src: https://github.com/overextended/ox_doorlock
+    ref: 251f666ba0a1b6ea58ac1c59d03022f04b9ab762
+    dest: ./resources/ox_doorlock
+
+    
+
+  - action: download_file
+    path: ./tmp/files/oxmysql.zip
+    url: https://github.com/overextended/oxmysql/releases/latest/download/oxmysql.zip
+  - action: unzip
+    dest: ./resources/[standalone]
+    src: ./tmp/files/oxmysql.zip
+
+  ## Cleanup
+  - action: remove_path
+    path: ./tmp
